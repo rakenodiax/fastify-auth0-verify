@@ -119,6 +119,10 @@ async function getRemoteSecret(domain, alg, kid, cache) {
     cache.set(cacheKey, secret)
     return secret
   } catch (e) {
+    if (e instanceof Unauthorized) {
+      throw e
+    }
+
     if (e.response) {
       throw InternalServerError(`${errorMessages.jwksHttpError}: [HTTP ${e.response.status}] ${JSON.stringify(e.body)}`)
     }
@@ -204,4 +208,4 @@ function fastifyAuth0Verify(instance, options, done) {
   }
 }
 
-module.exports = fastifyPlugin(fastifyAuth0Verify, { name: 'fastify-auth0-verify', fastify: '3.x' })
+module.exports = fastifyPlugin(fastifyAuth0Verify, { name: 'fastify-auth0-verify', fastify: '4.x' })
